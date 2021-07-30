@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">CND CONTROL</string>
+    <string name="app_name">多语言设置程序</string>
     <string name="btn_build_cqcode">生成二维码</string>
     <string name="btn_enter_wifi">连接WiFi</string>
     <string name="btn_enter_setting">设置</string>

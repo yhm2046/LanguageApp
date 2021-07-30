@@ -2,7 +2,10 @@ package com.cnd.zhongkong.languageapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +16,16 @@ import com.cnd.zhongkong.languageapp.databinding.ActivityLanguageBinding;
 import org.litepal.crud.DataSupport;
 
 import java.util.List;
+import java.util.Locale;
 
 public class MultiplyLanguage extends AppCompatActivity {
-    private String strLanguage=null;
+    private String strLanguage="auto";
     private static final String TAG="MultiplyLanguage:xwg";
     private static final String LAN_AUTO="auto";
     private static final String LAN_EN="en";
     private static final String LAN_ZH="zh";
     private ActivityLanguageBinding activityLanguageBinding=null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,24 +73,20 @@ public class MultiplyLanguage extends AppCompatActivity {
                 Language language=new Language();
                 language.setLanguage(strLanguage);
                 language.updateAll();
+//                应用设置好的语言
+                if (strLanguage.equals(LAN_AUTO))
+                    strLanguage=Locale.getDefault().getLanguage();
+                    Log.i(TAG,"strLanguage save as:"+strLanguage);
+                Locale myLocale = new Locale(strLanguage);
+                Resources res = getResources();
+                DisplayMetrics dm = res.getDisplayMetrics();
+                Configuration conf = res.getConfiguration();
+                conf.locale = myLocale;
+                res.updateConfiguration(conf, dm);
                 finish();
             }
         });
     }
 
-    /**
-     * 生成数据库，必须在这里写否则写在application不生效
-     */
-    private void buildDatabase() {
-        try {
-            List<Language> list= DataSupport.select("language").find(Language.class);
-            if (list.size()>0)
-                Log.i(TAG,"select lan:"+list.get(0).getLanguage());
-            else
-                Log.i(TAG,"select is null");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG,"select error:"+e.toString());
-        }
-    }
+
 }
